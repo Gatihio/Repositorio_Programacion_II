@@ -165,7 +165,7 @@ def CALCULAR_FREC_PORCENTUAL_ACUMULADA(lista):
 
     # Inicia bucle for que itera en cada elemento en frecuencia porcentual
     for elemento in frecuencia_porcentual:
-        # Suma el elemnto actual al total acumulado
+        #Suma el elemnto actual al total acumulado
         acumulada += elemento
         #Agrega el valor acumulado actual a la lista de frecuencias porcentuales acumuladas
         frecuencia_porcentual_acumulada.append(acumulada)
