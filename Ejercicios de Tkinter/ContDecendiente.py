@@ -7,7 +7,7 @@ def disminuir_contador():
     etiqueta_contador.config(text=f"Contador: {contador}")
 
 root = tk.Tk()
-root.title("Contador Decreciente")
+root.title("Contador Decreciente.")
 
 # Crear un marco
 marco = tk.Frame(root, bg="lightblue", padx=10, pady=10)
