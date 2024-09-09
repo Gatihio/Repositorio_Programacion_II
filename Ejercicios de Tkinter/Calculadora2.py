@@ -20,10 +20,10 @@ def calcular():
         else:
             resultado = "Seleccione una operación"
         
-        entrada_resultado.config(state='normal')  # Habilitar para modificar
-        entrada_resultado.delete(0, tk.END)  # Limpiar el campo
-        entrada_resultado.insert(0, str(resultado))  # Insertar el resultado
-        entrada_resultado.config(state='readonly')  # Volver a modo solo lectura
+        entrada_resultado.config(state='normal')  
+        entrada_resultado.delete(0, tk.END)  
+        entrada_resultado.insert(0, str(resultado))  
+        entrada_resultado.config(state='readonly')  
     
     except ValueError:
         entrada_resultado.config(state='normal')
