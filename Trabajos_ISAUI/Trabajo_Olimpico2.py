@@ -303,6 +303,39 @@ def distribucion_normal(x, mu, sigma):
 def distribucion_normal_intervalo(x1, x2, mu, sigma):
     return norm.cdf(x2, mu, sigma) - norm.cdf(x1, mu, sigma)
 
+def calcular_maximo(lista):
+    return max(lista)
+
+def calcular_minimo(lista):
+    return min(lista)
+
+def estandarizar_datos(lista):
+    if not lista:
+        return []
+    media = statistics.mean(lista)
+    desviacion_estandar = statistics.stdev(lista)
+    return [(x - media) / desviacion_estandar for x in lista]
+
+def comparar_datos(lista):
+    if not lista:
+        print("La lista está vacía. No se puede comparar.")
+        return
+
+    maximo = calcular_maximo(lista)
+    minimo = calcular_minimo(lista)
+    print(f"Máximo: {maximo}")
+    print(f"Mínimo: {minimo}")
+
+    valor_a_comparar = float(input("Ingrese un valor para comparar con el mínimo y el máximo: "))
+    print(f"¿El valor {valor_a_comparar} es mayor que el mínimo? {'Sí' if valor_a_comparar > minimo else 'No'}")
+    print(f"¿El valor {valor_a_comparar} es menor que el máximo? {'Sí' if valor_a_comparar < maximo else 'No'}")
+
+    estandarizados = estandarizar_datos(lista)
+    print(f"Datos estandarizados: {estandarizados}")
+    umbral = float(input("Ingrese un umbral para comparar los datos estandarizados: "))
+    mayores_que_umbral = [x for x in estandarizados if x > umbral]
+    print(f"Número de datos estandarizados mayores que {umbral}: {len(mayores_que_umbral)}")
+
 def DISTRIBUCIONES():
     while True:
         comando = int(input("¿Qué distribución desea calcular?\n 1 = BINOMIAL.\n 2 = POISSON.\n 3 = HIPERGEOMÉTRICA.\n 4 = NORMAL.\n ==> "))
@@ -349,18 +382,6 @@ def DISTRIBUCIONES():
         print("Comando no válido, intente de nuevo.")
     print(valor, resultado)
 
-def calcular_maximo(lista):
-    return max(lista)
-
-def calcular_minimo(lista):
-    return min(lista)
-
-def estandarizar_datos(lista):
-    if not lista:
-        return []
-    media = statistics.mean(lista)
-    desviacion_estandar = statistics.stdev(lista)
-    return [(x - media) / desviacion_estandar for x in lista]
 
 def menu_principal():
     while True:
@@ -390,13 +411,8 @@ def menu_principal():
                 elif submenu_opcion == "2":
                     MEDIDAS_POSICION(lista)
                 elif submenu_opcion == "3":
-                    maximo = calcular_maximo(lista)
-                    minimo = calcular_minimo(lista)
-                    estandarizados = estandarizar_datos(lista)
-                    print(f"Máximo: {maximo}")
-                    print(f"Mínimo: {minimo}")
-                    print(f"Datos estandarizados: {estandarizados}")
                     FUNCIONES_ESTADISTICAS(lista)
+                    comparar_datos(lista)
                 elif submenu_opcion == "4":
                     FRECUENCIAS(lista)
                 elif submenu_opcion == "5":
