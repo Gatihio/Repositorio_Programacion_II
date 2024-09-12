@@ -1,5 +1,7 @@
 import math
+import statistics
 from tabulate import tabulate
+from scipy.stats import norm
 
 # Funciones para medidas de posición
 def MEDIA(lista):
@@ -286,6 +288,21 @@ def FUNCIONES_INTERVALOS(lista):
             print("Comando no válido, intente de nuevo.")
     print(valor, resultado)
 
+def distribucion_binomial(n, p, k):
+    return math.comb(n, k) * (p**k) * ((1-p)**(n-k))
+
+def distribucion_poisson(lambd, k):
+    return (math.exp(-lambd) * lambd**k) / math.factorial(k)
+
+def distribucion_hipergeometrica(n, M, N, k):
+    return (math.comb(M, k) * math.comb(N - M, n - k)) / math.comb(N, n)
+
+def distribucion_normal(x, mu, sigma):
+    return norm.cdf(x, mu, sigma)
+
+def distribucion_normal_intervalo(x1, x2, mu, sigma):
+    return norm.cdf(x2, mu, sigma) - norm.cdf(x1, mu, sigma)
+
 def DISTRIBUCIONES():
     while True:
         comando = int(input("¿Qué distribución desea calcular?\n 1 = BINOMIAL.\n 2 = POISSON.\n 3 = HIPERGEOMÉTRICA.\n 4 = NORMAL.\n ==> "))
@@ -311,15 +328,39 @@ def DISTRIBUCIONES():
             valor = "La probabilidad para la distribución hipergeométrica es "
             break
         elif comando == 4:
-            x = float(input("Ingrese el valor de x: "))
+            calculo_tipo = int(input("¿Desea calcular para un valor específico o un intervalo?\n 1 = Valor específico.\n 2 = Intervalo.\n ==> "))
             mu = float(input("Ingrese la media (μ): "))
             sigma = float(input("Ingrese la desviación estándar (σ): "))
-            resultado = distribucion_normal(x, mu, sigma)
-            valor = "La probabilidad para la distribución normal es "
-            break
+            
+            if calculo_tipo == 1:
+                x = float(input("Ingrese el valor de x: "))
+                resultado = distribucion_normal(x, mu, sigma)
+                valor = "La probabilidad para la distribución normal para el valor específico es "
+            elif calculo_tipo == 2:
+                x1 = float(input("Ingrese el límite inferior del intervalo (x1): "))
+                x2 = float(input("Ingrese el límite superior del intervalo (x2): "))
+                resultado = distribucion_normal_intervalo(x1, x2, mu, sigma)
+                valor = "La probabilidad para la distribución normal en el intervalo es "
         else:
-            print("Comando no válido, intente de nuevo.")
+            print("Opcion no válido, intente de nuevo.")
+            continue
+        break
+    else:
+        print("Comando no válido, intente de nuevo.")
     print(valor, resultado)
+
+def calcular_maximo(lista):
+    return max(lista)
+
+def calcular_minimo(lista):
+    return min(lista)
+
+def estandarizar_datos(lista):
+    if not lista:
+        return []
+    media = statistics.mean(lista)
+    desviacion_estandar = statistics.stdev(lista)
+    return [(x - media) / desviacion_estandar for x in lista]
 
 def menu_principal():
     while True:
@@ -349,6 +390,12 @@ def menu_principal():
                 elif submenu_opcion == "2":
                     MEDIDAS_POSICION(lista)
                 elif submenu_opcion == "3":
+                    maximo = calcular_maximo(lista)
+                    minimo = calcular_minimo(lista)
+                    estandarizados = estandarizar_datos(lista)
+                    print(f"Máximo: {maximo}")
+                    print(f"Mínimo: {minimo}")
+                    print(f"Datos estandarizados: {estandarizados}")
                     FUNCIONES_ESTADISTICAS(lista)
                 elif submenu_opcion == "4":
                     FRECUENCIAS(lista)
