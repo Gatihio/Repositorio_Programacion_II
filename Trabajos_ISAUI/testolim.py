@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -16,7 +16,7 @@ def graficar_funcion(a, b, c, x1, x2, n):
     dx = (x2 - x1) / n
     for i in range(n):
         x_rect = x1 + i * dx
-        plt.bar(x_rect, a * x_rect**2 + b * x_rect + c, width=dx, align='edge', alpha=0.3, color='orange')
+        plt.fill_between([x_rect, x_rect+dx], [0, 0], [a * x_rect**2 + b * x_rect + c, a * (x_rect+dx)**2 + b * (x_rect+dx) + c], color='orange', alpha=0.3)
 
     plt.title('Gráfica de la función cuadrática')
     plt.xlabel('x')
@@ -33,20 +33,22 @@ def obtener_coeficientes(entry_a, entry_b, entry_c):
         c = float(entry_c.get())
         return a, b, c
     except ValueError:
+        messagebox.showerror("Error", "Los coeficientes deben ser números válidos")
         return None
 
 def calcular_area_rectangulos(entry_a, entry_b, entry_c, entry_x1, entry_x2, entry_n):
     """Calcula el área bajo la curva usando el método de rectángulos."""
     a, b, c = obtener_coeficientes(entry_a, entry_b, entry_c)
     if a is None:
-        return "Coeficientes inválidos"
+        return
 
     try:
         x1 = float(entry_x1.get())
         x2 = float(entry_x2.get())
         n = int(entry_n.get())
     except ValueError:
-        return "Entradas inválidas"
+        messagebox.showerror("Error", "Entradas inválidas. Por favor, ingrese números válidos.")
+        return
 
     def f(x):
         return a * x**2 + b * x + c
@@ -188,68 +190,23 @@ def abrir_area_bajo_curva():
     entry_n.pack(pady=5)
 
     resultado_var = tk.StringVar()
-    tk.Label(ventana_area, textvariable=resultado_var, bg="#f0f0f0").pack(pady=10)
 
-    def calcular():
+    def calcular_area():
         resultado = calcular_area_rectangulos(entry_a, entry_b, entry_c, entry_x1, entry_x2, entry_n)
-        resultado_var.set(resultado)
+        if resultado:
+            resultado_var.set(resultado)
 
-    tk.Button(ventana_area, text="Calcular", command=calcular, bg="#007acc", fg="white", width=15).pack(pady=20)
-
-def abrir_sistema_ecuaciones():
-    ventana_sistema = tk.Toplevel(root)
-    ventana_sistema.title("Sistema de Ecuaciones")
-    ventana_sistema.geometry("400x400")
-    ventana_sistema.resizable(False, False)
-    ventana_sistema.configure(bg="#f0f0f0")
-
-    tk.Label(ventana_sistema, text="Matriz de coeficientes (3x3):", bg="#f0f0f0").pack(pady=10)
-
-    matriz_frame = tk.Frame(ventana_sistema, bg="#f0f0f0")
-    matriz_frame.pack()
-
-    matriz_entries = []
-    for i in range(3):
-        fila_entries = []
-        for j in range(3):
-            entry = tk.Entry(matriz_frame, width=5)
-            entry.grid(row=i, column=j, padx=5, pady=5)
-            fila_entries.append(entry)
-        matriz_entries.append(fila_entries)
-
-    tk.Label(ventana_sistema, text="Vector de resultados (3x1):", bg="#f0f0f0").pack(pady=10)
-
-    vector_frame = tk.Frame(ventana_sistema, bg="#f0f0f0")
-    vector_frame.pack()
-
-    vector_entries = []
-    for i in range(3):
-        entry = tk.Entry(vector_frame, width=5)
-        entry.grid(row=i, column=0, padx=5, pady=5)
-        vector_entries.append(entry)
-
-    resultado_var = tk.StringVar()
-    tk.Label(ventana_sistema, textvariable=resultado_var, bg="#f0f0f0").pack(pady=10)
-
-    def resolver():
-        resolver_sistema(matriz_entries, vector_entries, resultado_var)
-
-    tk.Button(ventana_sistema, text="Resolver Sistema", command=resolver, bg="#007acc", fg="white", width=15).pack(pady=20)
-
-def salir():
-    root.quit()
+    tk.Button(ventana_area, text="Calcular Área", command=calcular_area, bg="#007acc", fg="white", width=15).pack(pady=20)
+    tk.Label(ventana_area, textvariable=resultado_var, bg="#f0f0f0").pack(pady=10)
 
 # Ventana principal
 root = tk.Tk()
-root.title("Calculadora de Matemáticas")
-root.geometry("500x600")
+root.title("Calculadora Matemática")
+root.geometry("400x400")
 root.resizable(False, False)
 root.configure(bg="#f0f0f0")
 
-# Botones
-tk.Button(root, text="Resolver Sistema de Ecuaciones", command=abrir_sistema_ecuaciones, bg="#007acc", fg="white", width=30).pack(pady=20)
-tk.Button(root, text="Área Bajo la Curva", command=abrir_area_bajo_curva, bg="#007acc", fg="white", width=30).pack(pady=20)
 tk.Button(root, text="Graficar Función Cuadrática", command=abrir_graficar_funcion, bg="#007acc", fg="white", width=30).pack(pady=20)
-tk.Button(root, text="Salir", command=salir, bg="#d9534f", fg="white", width=30).pack(pady=20)
+tk.Button(root, text="Calcular Área Bajo la Curva", command=abrir_area_bajo_curva, bg="#007acc", fg="white", width=30).pack(pady=20)
 
 root.mainloop()
